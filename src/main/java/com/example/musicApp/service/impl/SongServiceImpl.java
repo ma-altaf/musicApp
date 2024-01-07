@@ -2,14 +2,18 @@ package com.example.musicApp.service.impl;
 
 import com.example.musicApp.dto.SongUploadDto;
 import com.example.musicApp.dto.SongListingDto;
+import com.example.musicApp.enums.OrderEnum;
 import com.example.musicApp.model.Artist;
 import com.example.musicApp.model.Song;
 import com.example.musicApp.repository.ArtistRepository;
 import com.example.musicApp.repository.SongRepository;
 import com.example.musicApp.service.SongService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -56,6 +60,7 @@ public class SongServiceImpl implements SongService {
                 .downloads(0)
                 .favourites(0)
                 .listens(0)
+                .released(new Date().getTime())
                 .build();
 
         Set<Song> sources = new HashSet<>(songRepository.findAllById(details.source_ids().orElse(new ArrayList<>())));
@@ -66,8 +71,12 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public Iterable<Song> getSongs() {
-        return songRepository.findAll();
+    public Iterable<Song> getSongs(Integer pageNo, Integer pageSize, String orderBy, OrderEnum order) {
+        if (order == OrderEnum.ASC) {
+            return songRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(orderBy).ascending()));
+        } else {
+            return songRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(orderBy).descending()));
+        }
     }
 
     @Override

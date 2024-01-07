@@ -2,11 +2,14 @@ package com.example.musicApp.service.impl;
 
 import com.example.musicApp.dto.ArtistDto;
 import com.example.musicApp.dto.ArtistListingDto;
+import com.example.musicApp.enums.OrderEnum;
 import com.example.musicApp.model.Artist;
 import com.example.musicApp.model.Song;
 import com.example.musicApp.repository.ArtistRepository;
 import com.example.musicApp.repository.SongRepository;
 import com.example.musicApp.service.ArtistService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -131,7 +134,11 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
-    public Iterable<Artist> getArtists() {
-        return artistRepository.findAll();
+    public Iterable<Artist> getArtists(Integer pageNo, Integer pageSize, String orderBy, OrderEnum order) {
+        if (order == OrderEnum.ASC) {
+            return artistRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(orderBy).ascending()));
+        } else {
+            return artistRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(orderBy).descending()));
+        }
     }
 }

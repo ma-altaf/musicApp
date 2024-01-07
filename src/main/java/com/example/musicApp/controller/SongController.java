@@ -2,8 +2,11 @@ package com.example.musicApp.controller;
 
 import com.example.musicApp.dto.SongUploadDto;
 import com.example.musicApp.dto.SongListingDto;
+import com.example.musicApp.enums.OrderEnum;
 import com.example.musicApp.model.Song;
 import com.example.musicApp.service.SongService;
+import jakarta.persistence.Enumerated;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,13 +24,18 @@ public class SongController {
     }
 
     @PostMapping("/add")
-    public Song addSong(@RequestBody SongUploadDto songUploadDto) throws IOException {
+    public Song addSong(@ModelAttribute SongUploadDto songUploadDto) throws IOException {
         return songService.addSong(songUploadDto);
     }
 
     @GetMapping("/get")
-    public Iterable<Song> getSongs() {
-        return songService.getSongs();
+    public Iterable<Song> getSongs(
+            @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "" + Integer.MAX_VALUE) Integer pageSize,
+            @RequestParam(value = "orderBy", defaultValue = "released") String orderBy,
+            @RequestParam(value = "order", defaultValue = "ASC") OrderEnum order
+    ) {
+        return songService.getSongs(pageNo, pageSize, orderBy, order);
     }
 
     @GetMapping("/get/{id}")

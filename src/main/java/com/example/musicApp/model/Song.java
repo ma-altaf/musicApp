@@ -3,6 +3,7 @@ package com.example.musicApp.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -20,6 +21,7 @@ public class Song {
     private Integer favourites = 0; // how many users have liked the song
     private Integer downloads = 0; // how many times the song have been downloaded
     private Integer listens = 0; // how many times the song has been played
+    private Long released;
 
     @ManyToMany
     private Set<Song> sources;

@@ -2,6 +2,7 @@ package com.example.musicApp.controller;
 
 import com.example.musicApp.dto.ArtistDto;
 import com.example.musicApp.dto.ArtistListingDto;
+import com.example.musicApp.enums.OrderEnum;
 import com.example.musicApp.model.Artist;
 import com.example.musicApp.service.ArtistService;
 import org.springframework.http.ResponseEntity;
@@ -46,8 +47,13 @@ public class ArtistController {
     }
 
     @GetMapping("/get")
-    public Iterable<Artist> getArtists() {
-        return artistService.getArtists();
+    public Iterable<Artist> getArtists(
+            @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "" + Integer.MAX_VALUE) Integer pageSize,
+            @RequestParam(value = "orderBy", defaultValue = "username") String orderBy,
+            @RequestParam(value = "order", defaultValue = "ASC") OrderEnum order
+    ) {
+        return artistService.getArtists(pageNo, pageSize, orderBy, order);
     }
 
     @GetMapping("/get/{id}")
