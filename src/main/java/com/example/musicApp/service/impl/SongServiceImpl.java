@@ -1,24 +1,36 @@
 package com.example.musicApp.service.impl;
 
+import com.example.musicApp.dto.SongUploadDto;
+import com.example.musicApp.dto.SongListingDto;
+import com.example.musicApp.model.Artist;
 import com.example.musicApp.model.Song;
+import com.example.musicApp.repository.ArtistRepository;
 import com.example.musicApp.repository.SongRepository;
+import com.example.musicApp.service.SongService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.*;
 
 @Service
-public class SongServiceImpl implements com.example.musicApp.service.SongService {
+public class SongServiceImpl implements SongService {
     private final SongRepository songRepository;
+    private final ArtistRepository artistRepository;
 
-    public SongServiceImpl(SongRepository songRepository) {
+    public SongServiceImpl(SongRepository songRepository, ArtistRepository artistRepository) {
         this.songRepository = songRepository;
+        this.artistRepository = artistRepository;
     }
 
     @Override
-    public Song addSong(String title, MultipartFile imgFile, MultipartFile audioFile) throws IOException {
+    public Song addSong(SongUploadDto details) throws IOException {
+        Artist artist = artistRepository.findById(details.author_id()).get();
+
+        MultipartFile imgFile = details.image();
+        MultipartFile audioFile = details.audio();
+
         // create song id
         String songId = UUID.randomUUID().toString();
 
@@ -30,20 +42,25 @@ public class SongServiceImpl implements com.example.musicApp.service.SongService
         File local_imgFile = new File(path + "/songs/" + songId + "/" + imgFile.getOriginalFilename());
         File local_audioFile = new File(path + "/songs/" + songId + "/" + audioFile.getOriginalFilename());
 
+        // save the files to the file system
+        imgFile.transferTo(local_imgFile);
+        audioFile.transferTo(local_audioFile);
+
         // create the new song object
         Song song = Song.builder()
                 .id(songId)
-                .title(title)
+                .title(details.title())
                 .imgUrl(local_imgFile.getAbsoluteFile().toString())
                 .audioUrl(local_audioFile.getAbsoluteFile().toString())
+                .author(artist)
                 .downloads(0)
                 .favourites(0)
                 .listens(0)
                 .build();
 
-        // save the files to the file system
-        imgFile.transferTo(local_imgFile);
-        audioFile.transferTo(local_audioFile);
+        Set<Song> sources = new HashSet<>(songRepository.findAllById(details.source_ids().orElse(new ArrayList<>())));
+
+        song.setSources(sources);
 
         return songRepository.save(song);
     }
@@ -54,7 +71,10 @@ public class SongServiceImpl implements com.example.musicApp.service.SongService
     }
 
     @Override
-    public Song getSong(Integer id) {
+    public Song getSong(String id) {
         return songRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public Iterable<SongListingDto> searchSongs(String query) { return songRepository.findAllByTitleContainingIgnoreCase(query); }
 }

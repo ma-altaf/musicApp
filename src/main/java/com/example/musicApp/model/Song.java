@@ -1,10 +1,7 @@
 package com.example.musicApp.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 
@@ -24,9 +21,9 @@ public class Song {
     private Integer downloads = 0; // how many times the song have been downloaded
     private Integer listens = 0; // how many times the song has been played
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
     private Set<Song> sources;
 
-    @OneToMany(mappedBy = "song")
-    private Set<ArtistSong> artistSongs;
+    @ManyToOne
+    private Artist author;
 }

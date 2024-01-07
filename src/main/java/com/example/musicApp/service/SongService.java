@@ -1,14 +1,18 @@
 package com.example.musicApp.service;
 
+import com.example.musicApp.dto.SongUploadDto;
+import com.example.musicApp.dto.SongListingDto;
 import com.example.musicApp.model.Song;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 public interface SongService {
-    Song addSong(String title, MultipartFile imgFile, MultipartFile audioFile) throws IOException;
+    Song addSong(SongUploadDto songUploadDto) throws IOException;
 
     Iterable<Song> getSongs();
 
-    Song getSong(Integer id);
+    Song getSong(String id);
+
+    Iterable<SongListingDto> searchSongs(String query);
+
 }
