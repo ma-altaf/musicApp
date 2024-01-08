@@ -1,4 +1,4 @@
-package com.example.musicApp.config;
+package com.example.musicApp.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,9 +17,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final JwtAuthEntryPoint jwtAuthEntryPoint;
+
     private CustomUserDetailService userDetailService;
 
-    public SecurityConfig(CustomUserDetailService userDetailService) {
+    public SecurityConfig(JwtAuthEntryPoint jwtAuthEntryPoint, CustomUserDetailService userDetailService) {
+        this.jwtAuthEntryPoint = jwtAuthEntryPoint;
         this.userDetailService = userDetailService;
     }
 
@@ -26,6 +30,11 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.authenticationEntryPoint(jwtAuthEntryPoint))
+                .sessionManagement(httpSecuritySessionManagement ->
+                        httpSecuritySessionManagement
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers("/auth/**").permitAll()

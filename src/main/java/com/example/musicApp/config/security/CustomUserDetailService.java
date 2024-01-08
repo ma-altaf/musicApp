@@ -1,4 +1,4 @@
-package com.example.musicApp.config;
+package com.example.musicApp.config.security;
 
 import com.example.musicApp.model.Artist;
 import com.example.musicApp.model.Role;
