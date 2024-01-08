@@ -12,31 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/artist")
+@RequestMapping(value = "/artist", method = {RequestMethod.GET})
 public class ArtistController {
 
     private final ArtistService artistService;
 
     public ArtistController(ArtistService artistService) {
         this.artistService = artistService;
-    }
-
-    @PostMapping("/create")
-    public Artist createArtist(@RequestBody Artist artist) {
-        return artistService.signUp(artist);
-    }
-
-    @PostMapping("/login")
-    public Artist loginArtist(@RequestBody Artist artist) {
-        return artistService.login(artist);
-    }
-
-    @PostMapping("/updatePassword")
-    public Artist updatePassword(
-            @RequestParam("username") String username,
-            @RequestParam("oldPassword") String oldPassword,
-            @RequestParam("newPassword") String newPassword) {
-        return artistService.updatePassword(username, oldPassword, newPassword);
     }
 
     @PostMapping("/updateImg/{id}")

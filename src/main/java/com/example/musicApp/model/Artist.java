@@ -22,7 +22,9 @@ public class Artist {
     private String username;
     private String imgUrl;
 
-    //TODO: encode plain text
-    //TODO: add @JsonIgnore
+    @JsonIgnore
     private String password;
+
+    @ManyToMany
+    private Set<Role> roles = new HashSet<>();
 }

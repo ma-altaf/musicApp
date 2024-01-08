@@ -11,12 +11,6 @@ import java.io.IOException;
 
 public interface ArtistService {
 
-    Artist signUp(Artist artist);
-
-    Artist login(Artist artist);
-
-    Artist updatePassword(String username,String oldPassword, String newPassword);
-
     ResponseEntity<byte[]> updateImg(Integer user_id, MultipartFile imgFile) throws IOException;
 
     Iterable<ArtistListingDto> searchArtists(String query);

@@ -5,8 +5,6 @@ import com.example.musicApp.dto.SongListingDto;
 import com.example.musicApp.enums.OrderEnum;
 import com.example.musicApp.model.Song;
 import com.example.musicApp.service.SongService;
-import jakarta.persistence.Enumerated;
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/song")
+@RequestMapping(value = "/song", method = {RequestMethod.GET})
 public class SongController {
 
     private final SongService songService;

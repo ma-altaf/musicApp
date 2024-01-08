@@ -23,51 +23,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class ArtistServiceImpl implements ArtistService {
-
     private final ArtistRepository artistRepository;
-
     private final SongRepository songRepository;
 
     public ArtistServiceImpl(ArtistRepository artistRepository, SongRepository songRepository) {
         this.artistRepository = artistRepository;
         this.songRepository = songRepository;
-    }
-
-    @Override
-    public Artist signUp(Artist artist) {
-        if (artistRepository.findByUsername(artist.getUsername()).isPresent()) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-
-        return artistRepository.save(artist);
-    }
-
-    @Override
-    public Artist login(Artist artist) {
-        Artist artistDb = artistRepository.findByUsername(artist.getUsername()).orElse(null);
-
-        // user not found
-        if (artistDb == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-
-        // incorrect password
-        if (!artistDb.getPassword().equals(artist.getPassword())) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-
-        return artistDb;
-    }
-
-    @Override
-    public Artist updatePassword(String username, String oldPassword, String newPassword) {
-        Artist artist = artistRepository.findByUsername(username).orElse(null);
-
-        // user not found
-        if (artist == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-
-        // incorrect old password
-        if (!oldPassword.equals(artist.getPassword())) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-
-        // update password
-        artist.setPassword(newPassword);
-        artistRepository.save(artist);
-
-        return artist;
     }
 
     @Override
