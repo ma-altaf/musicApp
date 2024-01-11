@@ -4,6 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -31,8 +32,17 @@ public class JwtGenerator {
                 .compact();
     }
 
-    public String getUsernameFromToken(String token) {
-        return ""; // parse token
+    public String getUsernameFromJWT(String token) {
+        return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload().getSubject();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token);
+            return true;
+        } catch (Exception e) {
+            throw new AuthenticationCredentialsNotFoundException("Jwt expired or incorrect.");
+        }
     }
 
     private SecretKey getSigningKey() {

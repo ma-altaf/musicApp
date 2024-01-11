@@ -4,6 +4,7 @@ import com.example.musicApp.dto.LoginDto;
 import com.example.musicApp.dto.RegisterDto;
 import com.example.musicApp.model.Artist;
 import com.example.musicApp.service.AuthenticationService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,7 +23,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public Artist loginArtist(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<Artist> loginArtist(@RequestBody LoginDto loginDto) {
         return authenticationService.login(loginDto);
     }
 

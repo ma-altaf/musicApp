@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "/song", method = {RequestMethod.GET})
@@ -22,8 +23,8 @@ public class SongController {
     }
 
     @PostMapping("/add")
-    public Song addSong(@ModelAttribute SongUploadDto songUploadDto) throws IOException {
-        return songService.addSong(songUploadDto);
+    public Song addSong(@ModelAttribute SongUploadDto songUploadDto, Principal principal) throws IOException {
+        return songService.addSong(principal.getName(), songUploadDto);
     }
 
     @GetMapping("/get")

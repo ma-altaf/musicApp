@@ -8,7 +8,7 @@ import com.example.musicApp.model.Song;
 import java.io.IOException;
 
 public interface SongService {
-    Song addSong(SongUploadDto songUploadDto) throws IOException;
+    Song addSong(String username, SongUploadDto songUploadDto) throws IOException;
 
     Iterable<Song> getSongs(Integer pageNo, Integer pageSize, String orderBy, OrderEnum order);
 

@@ -29,8 +29,8 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public Song addSong(SongUploadDto details) throws IOException {
-        Artist artist = artistRepository.findById(details.author_id()).get();
+    public Song addSong(String username, SongUploadDto details) throws IOException {
+        Artist artist = artistRepository.findByUsername(username).get();
 
         MultipartFile imgFile = details.image();
         MultipartFile audioFile = details.audio();

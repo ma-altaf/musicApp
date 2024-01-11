@@ -30,7 +30,7 @@ public class CustomUserDetailService implements UserDetailsService {
         return new User(artist.getUsername(), artist.getPassword(), mapRolesToAuthorities(artist.getRoles()));
     }
 
-    private Set<GrantedAuthority> mapRolesToAuthorities(Set<Role> roles) {
-        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toSet());
+    private List<GrantedAuthority> mapRolesToAuthorities(Set<Role> roles) {
+        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
     }
 }
