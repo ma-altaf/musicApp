@@ -2,20 +2,17 @@ package com.example.musicApp.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @Entity
-@Table(name = "role")
-public class Role {
+@Table(name = "playlist_song")
+public class PlaylistSong {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String name;
+    @ManyToOne
+    private Song song;
 
-    public Role(String name) {
-        this.name = name;
-    }
+    private Integer position;
 }

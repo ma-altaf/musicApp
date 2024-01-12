@@ -20,6 +20,7 @@ public class Artist {
 
     @Column(unique = true)
     private String username;
+
     private String imgUrl;
 
     @JsonIgnore
@@ -27,4 +28,9 @@ public class Artist {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "fk_artist_id")
+    private Set<Playlist> playlists;
 }
