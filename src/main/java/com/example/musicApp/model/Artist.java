@@ -26,6 +26,7 @@ public class Artist {
     @JsonIgnore
     private String password;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
