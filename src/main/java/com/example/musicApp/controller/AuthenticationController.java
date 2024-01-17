@@ -2,10 +2,10 @@ package com.example.musicApp.controller;
 
 import com.example.musicApp.dto.LoginDto;
 import com.example.musicApp.dto.RegisterDto;
+import com.example.musicApp.dto.TokenDto;
 import com.example.musicApp.dto.UpdatePasswordDto;
 import com.example.musicApp.model.Artist;
 import com.example.musicApp.service.AuthenticationService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -21,12 +21,12 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public Artist createArtist(@RequestBody RegisterDto registerDto) {
+    public TokenDto<Artist> createArtist(@RequestBody RegisterDto registerDto) {
         return authenticationService.signUp(registerDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Artist> loginArtist(@RequestBody LoginDto loginDto) {
+    public TokenDto<Artist> loginArtist(@RequestBody LoginDto loginDto) {
         return authenticationService.login(loginDto);
     }
 

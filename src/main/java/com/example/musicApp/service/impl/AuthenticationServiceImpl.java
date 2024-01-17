@@ -3,14 +3,13 @@ package com.example.musicApp.service.impl;
 import com.example.musicApp.config.security.JwtGenerator;
 import com.example.musicApp.dto.LoginDto;
 import com.example.musicApp.dto.RegisterDto;
+import com.example.musicApp.dto.TokenDto;
 import com.example.musicApp.model.Artist;
 import com.example.musicApp.model.Role;
 import com.example.musicApp.repository.ArtistRepository;
 import com.example.musicApp.repository.RoleRepository;
 import com.example.musicApp.service.AuthenticationService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,7 +39,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Artist signUp(RegisterDto registerDto) {
+    public TokenDto<Artist> signUp(RegisterDto registerDto) {
         if (artistRepository.existsByUsername(registerDto.username())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
         Artist artist = new Artist();
@@ -52,11 +51,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Role roles = roleRepository.findByName("USER").get();
         artist.setRoles(Set.of(roles));
 
-        return artistRepository.save(artist);
+        artistRepository.save(artist);
+
+        return login(new LoginDto(registerDto.username(), registerDto.password()));
     }
 
     @Override
-    public ResponseEntity<Artist> login(LoginDto loginDto) {
+    public TokenDto<Artist> login(LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password())
         );
@@ -67,7 +68,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String token = jwtGenerator.generateToken(authentication);
         Artist artist = artistRepository.findByUsername(loginDto.username()).get();
 
-        return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(artist);
+        return new TokenDto<>(artist, token);
     }
 
     @Override
