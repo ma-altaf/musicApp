@@ -73,11 +73,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public Artist updatePassword(String username, String oldPassword, String newPassword) {
         // user not found
-        if (artistRepository.existsByUsername(username)) throw new UsernameNotFoundException("Artist does not exists.");
+        if (!artistRepository.existsByUsername(username)) throw new UsernameNotFoundException("Artist does not exists.");
         Artist artist = artistRepository.findByUsername(username).get();
 
         // incorrect old password
-        if (!oldPassword.equals(artist.getPassword())) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        if (!passwordEncoder.matches(oldPassword, artist.getPassword())) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
         // update password
         artist.setPassword(newPassword);

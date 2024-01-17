@@ -2,10 +2,13 @@ package com.example.musicApp.controller;
 
 import com.example.musicApp.dto.LoginDto;
 import com.example.musicApp.dto.RegisterDto;
+import com.example.musicApp.dto.UpdatePasswordDto;
 import com.example.musicApp.model.Artist;
 import com.example.musicApp.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,9 +32,12 @@ public class AuthenticationController {
 
     @PostMapping("/updatePassword")
     public Artist updatePassword(
-            @RequestParam("username") String username,
-            @RequestParam("oldPassword") String oldPassword,
-            @RequestParam("newPassword") String newPassword) {
-        return authenticationService.updatePassword(username, oldPassword, newPassword);
+            Principal principal,
+            @RequestBody UpdatePasswordDto updatePasswordDto) {
+        System.out.println("\n\n\n attempting update");
+        return authenticationService.updatePassword(
+                principal.getName(),
+                updatePasswordDto.oldPassword(),
+                updatePasswordDto.newPassword());
     }
 }
