@@ -5,11 +5,7 @@ import com.example.musicApp.dto.ArtistListingDto;
 import com.example.musicApp.enums.OrderEnum;
 import com.example.musicApp.model.Artist;
 import com.example.musicApp.service.ArtistService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "/artist", method = {RequestMethod.GET})
@@ -19,13 +15,6 @@ public class ArtistController {
 
     public ArtistController(ArtistService artistService) {
         this.artistService = artistService;
-    }
-
-    @PostMapping("/updateImg/{id}")
-    public ResponseEntity<byte[]> updateImg(
-            @PathVariable Integer id,
-            @RequestParam("imgFile")MultipartFile imgFile) throws IOException {
-        return artistService.updateImg(id, imgFile);
     }
 
     @GetMapping("/get")

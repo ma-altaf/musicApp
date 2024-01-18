@@ -46,8 +46,8 @@ public class SecurityConfig {
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/auth/updatePassword").authenticated()
-                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/auth/register").permitAll()
+                                .requestMatchers("/auth/login").permitAll()
                                 .requestMatchers("/song/get/**").permitAll()
                                 .requestMatchers("/song/search/**").permitAll()
                                 .requestMatchers("/artist/get/**").permitAll()

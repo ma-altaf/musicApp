@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,22 +31,22 @@ public class ArtistServiceImpl implements ArtistService {
     }
 
     @Override
-    public ResponseEntity<byte[]> updateImg(Integer user_id, MultipartFile imgFile) throws IOException {
+    public Artist updateImg(String username, MultipartFile imgFile) throws IOException {
         // ensure the new imageFile is not null
         if (imgFile == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
         // get user
-        Artist artist = artistRepository.findById(user_id).orElse(null);
+        Artist artist = artistRepository.findByUsername(username).orElse(null);
         if (artist == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
         // save file
         // get reference to local folder
         String path = System.getProperty("user.dir");
         // create the new folder
-        new File(path + "/profileImg/" + user_id).mkdirs();
+        new File(path + "/profileImg/" + artist.getId()).mkdirs();
 
         // save the file to the local file system
-        File local_imgFile = new File(path + "/profileImg/" + user_id + "/" + imgFile.getOriginalFilename());
+        File local_imgFile = new File(path + "/profileImg/" + artist.getId() + "/" + imgFile.getOriginalFilename());
 
         imgFile.transferTo(local_imgFile);
 
@@ -55,7 +54,7 @@ public class ArtistServiceImpl implements ArtistService {
         artist.setImgUrl(local_imgFile.getAbsoluteFile().toString());
 
         // update the user record
-        artistRepository.save(artist);
+        artist = artistRepository.save(artist);
 
         HttpHeaders headers = new HttpHeaders();
 
@@ -68,7 +67,7 @@ public class ArtistServiceImpl implements ArtistService {
                 .build();
         headers.setContentDisposition(build);
 
-        return new ResponseEntity<>(Files.readAllBytes(local_imgFile.toPath()), headers, HttpStatus.OK);
+        return artist;
     }
 
     @Override

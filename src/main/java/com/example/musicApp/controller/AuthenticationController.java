@@ -5,9 +5,13 @@ import com.example.musicApp.dto.RegisterDto;
 import com.example.musicApp.dto.TokenDto;
 import com.example.musicApp.dto.UpdatePasswordDto;
 import com.example.musicApp.model.Artist;
+import com.example.musicApp.service.ArtistService;
 import com.example.musicApp.service.AuthenticationService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 
 @RestController
@@ -15,9 +19,18 @@ import java.security.Principal;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final ArtistService artistService;
 
-    public AuthenticationController(AuthenticationService authenticationService) {
+    public AuthenticationController(AuthenticationService authenticationService, ArtistService artistService) {
         this.authenticationService = authenticationService;
+        this.artistService = artistService;
+    }
+
+    @PostMapping("/updateImg")
+    public Artist updateImg(
+            Principal principal,
+            @RequestParam("imgFile") MultipartFile imgFile) throws IOException {
+        return artistService.updateImg(principal.getName(), imgFile);
     }
 
     @GetMapping("/currentArtist")
