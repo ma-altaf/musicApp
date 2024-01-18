@@ -1,5 +1,6 @@
 package com.example.musicApp.service.impl;
 
+import com.example.musicApp.dto.PlaylistDto;
 import com.example.musicApp.model.Artist;
 import com.example.musicApp.model.Playlist;
 import com.example.musicApp.model.PlaylistSong;
@@ -11,6 +12,8 @@ import com.example.musicApp.service.PlaylistService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.stream.Collectors;
 
 @Service
 public class PlaylistServiceImpl implements PlaylistService {
@@ -41,14 +44,16 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public Iterable<Playlist> getArtistPlaylists(String username) {
+    public Iterable<PlaylistDto> getArtistPlaylists(String username) {
         Artist artist = artistRepository.findByUsername(username).orElse(null);
 
         if (artist == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        return artist.getPlaylists();
+        return artist.getPlaylists().stream()
+                .map(playlist -> new PlaylistDto(playlist.getId(), playlist.getTitle()))
+                .collect(Collectors.toSet());
     }
 
     @Override

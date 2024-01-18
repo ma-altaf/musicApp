@@ -20,6 +20,11 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
+    @GetMapping("/currentArtist")
+    public Artist currentArtist(Principal principal) {
+        return authenticationService.getCurrentUser(principal);
+    }
+
     @PostMapping("/register")
     public TokenDto<Artist> createArtist(@RequestBody RegisterDto registerDto) {
         return authenticationService.signUp(registerDto);

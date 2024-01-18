@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.Set;
 
 @Service
@@ -85,5 +86,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         artistRepository.save(artist);
 
         return artist;
+    }
+
+    @Override
+    public Artist getCurrentUser(Principal principal) {
+        return artistRepository.findByUsername(principal.getName()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
     }
 }

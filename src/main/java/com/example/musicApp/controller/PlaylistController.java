@@ -19,7 +19,7 @@ public class PlaylistController {
 
     @PostMapping("/add")
     private Playlist addPlaylist(Principal principal, @RequestBody PlaylistDto playlistDto) {
-        return playlistService.addPlaylist(principal.getName(), playlistDto.name());
+        return playlistService.addPlaylist(principal.getName(), playlistDto.title());
     }
 
     @GetMapping("/get/{id}")
@@ -28,7 +28,7 @@ public class PlaylistController {
     }
 
     @GetMapping("/get")
-    private Iterable<Playlist> getArtistPlaylist(Principal principal) {
+    private Iterable<PlaylistDto> getArtistPlaylist(Principal principal) {
         return playlistService.getArtistPlaylists(principal.getName());
     }
 
