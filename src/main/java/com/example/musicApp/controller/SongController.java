@@ -27,6 +27,11 @@ public class SongController {
         return songService.addSong(principal.getName(), songUploadDto);
     }
 
+    @PostMapping("/update")
+    public Song updateSong(Principal principal, @ModelAttribute Song song) throws IOException {
+        return songService.updateSong(principal.getName(), song);
+    }
+
     @GetMapping("/get")
     public Iterable<Song> getSongs(
             @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,

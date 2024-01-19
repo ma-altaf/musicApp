@@ -108,4 +108,16 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public Iterable<SongListingDto> searchSongs(String query) { return songRepository.findAllByTitleContainingIgnoreCase(query); }
+
+    @Override
+    public Song updateSong(String username, Song song) {
+        Song songDb = songRepository.getReferenceById(song.getId());
+
+        if (!songDb.getAuthor().getUsername().equals(username))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+
+        songDb = songRepository.save(song);
+
+        return songDb;
+    }
 }
