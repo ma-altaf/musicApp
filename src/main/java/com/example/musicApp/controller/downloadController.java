@@ -37,7 +37,7 @@ public class downloadController {
 
     @GetMapping("song/img/**")
     public ResponseEntity<byte[]> getSongImgFile(HttpServletRequest request) throws IOException {
-        String url = request.getRequestURI().replaceAll("%20", " ");
+        String url = request.getRequestURL().toString().replaceAll("%20", " ");
 
         Song song = songService.getSongByImgUrl(url);
         File imgFile = new File(song.getLocalImgUrl());
@@ -47,7 +47,7 @@ public class downloadController {
 
     @GetMapping("song/audio/**")
     public ResponseEntity<byte[]> getSongAudioFile(HttpServletRequest request) throws IOException {
-        String url = request.getRequestURI().replaceAll("%20", " ");
+        String url = request.getRequestURL().toString().replaceAll("%20", " ");
 
         Song song = songService.getSongByAudioUrl(url);
         File imgFile = new File(song.getAudioUrl());

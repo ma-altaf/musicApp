@@ -10,8 +10,10 @@ import com.example.musicApp.repository.SongRepository;
 import com.example.musicApp.service.SongService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.awt.print.Pageable;
 import java.io.File;
@@ -96,6 +98,12 @@ public class SongServiceImpl implements SongService {
     @Override
     public Song getSong(String id) {
         return songRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Iterable<Song> getAllSongsByArtist(Integer id) {
+        Artist artist = artistRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return songRepository.findAllByAuthor(artist);
     }
 
     @Override

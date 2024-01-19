@@ -16,6 +16,8 @@ public interface SongService {
     Song getSongByAudioUrl(String audioUrl);
     Song getSong(String id);
 
+    Iterable<Song> getAllSongsByArtist(Integer id);
+
     Iterable<SongListingDto> searchSongs(String query);
 
 }

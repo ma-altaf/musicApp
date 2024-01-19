@@ -48,4 +48,9 @@ public class SongController {
     public Iterable<SongListingDto> searchSongs(@PathVariable String query) {
         return songService.searchSongs(query);
     }
+
+    @GetMapping("artist/{id}")
+    public Iterable<Song> getArtistSongs(@PathVariable Integer id) {
+        return songService.getAllSongsByArtist(id);
+    }
 }
