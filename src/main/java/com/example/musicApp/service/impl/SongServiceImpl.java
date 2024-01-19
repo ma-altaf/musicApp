@@ -33,7 +33,9 @@ public class SongServiceImpl implements SongService {
         Artist artist = artistRepository.findByUsername(username).get();
 
         MultipartFile imgFile = details.image();
+        String imgFileExtension = imgFile.getOriginalFilename().substring(imgFile.getOriginalFilename().lastIndexOf("."));
         MultipartFile audioFile = details.audio();
+        String audioFileExtension = audioFile.getOriginalFilename().substring(audioFile.getOriginalFilename().lastIndexOf("."));
 
         // create song id
         String songId = UUID.randomUUID().toString();
@@ -43,8 +45,8 @@ public class SongServiceImpl implements SongService {
         // create the new folder
         new File(path + "/songs/" + songId).mkdirs();
         // create the image and audio file
-        File local_imgFile = new File(path + "/songs/" + songId + "/" + imgFile.getOriginalFilename());
-        File local_audioFile = new File(path + "/songs/" + songId + "/" + audioFile.getOriginalFilename());
+        File local_imgFile = new File(path + "/songs/" + songId + "/" + songId + "-songImg" + imgFileExtension);
+        File local_audioFile = new File(path + "/songs/" + songId + "/" + songId + "-songAudio" + audioFileExtension);
 
         // save the files to the file system
         imgFile.transferTo(local_imgFile);
@@ -54,8 +56,10 @@ public class SongServiceImpl implements SongService {
         Song song = Song.builder()
                 .id(songId)
                 .title(details.title())
-                .imgUrl(local_imgFile.getAbsoluteFile().toString())
-                .audioUrl(local_audioFile.getAbsoluteFile().toString())
+                .imgUrl("http://localhost:8080/download/song/img/" + songId + "-songImg" + imgFileExtension)
+                .localImgUrl(local_imgFile.getAbsoluteFile().toString())
+                .audioUrl("http://localhost:8080/download/song/audio/" + songId + "-songAudio" + audioFileExtension)
+                .localAudioUrl(local_audioFile.getAbsoluteFile().toString())
                 .author(artist)
                 .downloads(0)
                 .favourites(0)
@@ -77,6 +81,16 @@ public class SongServiceImpl implements SongService {
         } else {
             return songRepository.findAll(PageRequest.of(pageNo, pageSize, Sort.by(orderBy).descending()));
         }
+    }
+
+    @Override
+    public Song getSongByImgUrl(String imgUrl) {
+        return songRepository.findByImgUrl(imgUrl).orElse(null);
+    }
+
+    @Override
+    public Song getSongByAudioUrl(String audioUrl) {
+        return songRepository.findByAudioUrl(audioUrl).orElse(null);
     }
 
     @Override

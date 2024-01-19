@@ -16,5 +16,7 @@ public interface ArtistService {
 
     ArtistDto getArtistById(Integer id);
 
+    Artist getArtistByImgUrl(String imgUrl);
+
     Iterable<Artist> getArtists(Integer pageNo, Integer pageSize, String orderBy, OrderEnum order);
 }

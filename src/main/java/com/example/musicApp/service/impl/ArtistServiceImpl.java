@@ -44,28 +44,19 @@ public class ArtistServiceImpl implements ArtistService {
         String path = System.getProperty("user.dir");
         // create the new folder
         new File(path + "/profileImg/" + artist.getId()).mkdirs();
+        String imgFileExtension = imgFile.getOriginalFilename().substring(imgFile.getOriginalFilename().lastIndexOf("."));
 
         // save the file to the local file system
-        File local_imgFile = new File(path + "/profileImg/" + artist.getId() + "/" + imgFile.getOriginalFilename());
+        File local_imgFile = new File(path + "/profileImg/" + artist.getId() + "/" + artist.getId() + "-profileImg" + imgFileExtension);
 
         imgFile.transferTo(local_imgFile);
 
         // update the user imageUrl
-        artist.setImgUrl(local_imgFile.getAbsoluteFile().toString());
+        artist.setLocalImgUrl(local_imgFile.getAbsoluteFile().toString());
+        artist.setImgUrl("http://localhost:8080/download/artist/img/" + + artist.getId() + "-profileImg" + imgFileExtension);
 
         // update the user record
         artist = artistRepository.save(artist);
-
-        HttpHeaders headers = new HttpHeaders();
-
-        if (imgFile.getContentType() == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-
-        headers.setContentType(MediaType.valueOf(imgFile.getContentType()));
-        ContentDisposition build = ContentDisposition
-                .builder("attachment")
-                .filename(imgFile.getOriginalFilename())
-                .build();
-        headers.setContentDisposition(build);
 
         return artist;
     }
@@ -91,6 +82,11 @@ public class ArtistServiceImpl implements ArtistService {
         Iterable<Song> songs = songRepository.findAllByAuthor(artist);
 
         return new ArtistDto(artist.getId(), artist.getUsername(), artist.getImgUrl(), songs);
+    }
+
+    @Override
+    public Artist getArtistByImgUrl(String imgUrl) {
+        return artistRepository.findByImgUrl(imgUrl).orElse(null);
     }
 
     @Override

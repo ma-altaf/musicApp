@@ -21,6 +21,9 @@ public class Artist {
     @Column(unique = true)
     private String username;
 
+    @JsonIgnore
+    private String localImgUrl;
+
     private String imgUrl;
 
     @JsonIgnore

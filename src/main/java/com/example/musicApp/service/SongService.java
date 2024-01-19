@@ -12,6 +12,8 @@ public interface SongService {
 
     Iterable<Song> getSongs(Integer pageNo, Integer pageSize, String orderBy, OrderEnum order);
 
+    Song getSongByImgUrl(String imgUrl);
+    Song getSongByAudioUrl(String audioUrl);
     Song getSong(String id);
 
     Iterable<SongListingDto> searchSongs(String query);
