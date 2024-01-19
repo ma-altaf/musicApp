@@ -23,7 +23,7 @@ public class SongController {
     }
 
     @PostMapping("/add")
-    public Song addSong(@ModelAttribute SongUploadDto songUploadDto, Principal principal) throws IOException {
+    public Song addSong(Principal principal, @ModelAttribute SongUploadDto songUploadDto) throws IOException {
         return songService.addSong(principal.getName(), songUploadDto);
     }
 
