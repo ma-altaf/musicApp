@@ -19,10 +19,10 @@ public class init {
     public CommandLineRunner commandLineRunner() {
         // insert contents for Demo
         return auth -> {
-            System.out.println("cmd hello!");
-
             // initialize USER role
-            roleRepository.save(new Role("USER"));
+            if (!roleRepository.existsByName("USER")) {
+                roleRepository.save(new Role("USER"));
+            }
         };
     }
 }
