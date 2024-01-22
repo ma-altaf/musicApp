@@ -50,8 +50,8 @@ public class downloadController {
         String url = request.getRequestURL().toString().replaceAll("%20", " ");
 
         Song song = songService.getSongByAudioUrl(url);
-        File imgFile = new File(song.getAudioUrl());
+        File audioFile = new File(song.getLocalAudioUrl());
 
-        return ResponseEntity.ok(Files.readAllBytes(imgFile.toPath()));
+        return ResponseEntity.ok(Files.readAllBytes(audioFile.toPath()));
     }
 }

@@ -12,7 +12,7 @@ public interface SongRepository extends JpaRepository<Song, String> {
     List<SongListingDto> findAllByTitleContainingIgnoreCase(String query);
 
     Optional<Song> findByImgUrl(String imgUrl);
-    Optional<Song> findByAudioUrl(String imgUrl);
+    Optional<Song> findByAudioUrl(String audioUrl);
 
     List<Song> findAllByAuthor(Artist author);
 }
