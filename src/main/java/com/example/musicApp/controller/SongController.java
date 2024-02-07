@@ -54,8 +54,16 @@ public class SongController {
         return songService.searchSongs(query);
     }
 
-    @GetMapping("artist/{id}")
+    @GetMapping("/artist/{id}")
     public Iterable<Song> getArtistSongs(@PathVariable Integer id) {
         return songService.getAllSongsByArtist(id);
+    }
+
+    @GetMapping("/favourite/{id}")
+    public Song incrementFavourite(@PathVariable String id) {
+        Song song = songService.getSong(id);
+        System.out.println("song:" + song);
+        if (song == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return songService.incrementFavourite(song);
     }
 }

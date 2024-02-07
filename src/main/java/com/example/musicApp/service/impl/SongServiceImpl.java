@@ -120,4 +120,30 @@ public class SongServiceImpl implements SongService {
 
         return songDb;
     }
+
+    @Override
+    public Song incrementDownload(Song song) {
+        // increment download
+        song.setDownloads(song.getDownloads() + 1);
+
+        return songRepository.save(song);
+    }
+
+    @Override
+    public Song incrementFavourite(Song song) {
+        // increment download
+        song.setFavourites(song.getFavourites() + 1);
+
+        return songRepository.save(song);
+    }
+
+    @Override
+    public Song incrementListen(Song song) {
+        // increment download
+        song.setListens(song.getListens() + 1);
+
+        return songRepository.save(song);
+    }
+
+
 }

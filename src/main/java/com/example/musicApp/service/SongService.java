@@ -21,4 +21,8 @@ public interface SongService {
     Iterable<SongListingDto> searchSongs(String query);
 
     Song updateSong(String username, Song song);
+
+    Song incrementDownload(Song song);
+    Song incrementFavourite(Song song);
+    Song incrementListen(Song song);
 }

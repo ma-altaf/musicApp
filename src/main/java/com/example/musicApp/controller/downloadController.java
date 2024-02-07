@@ -52,6 +52,9 @@ public class downloadController {
         Song song = songService.getSongByAudioUrl(url);
         File audioFile = new File(song.getLocalAudioUrl());
 
+        // increment the listen counter
+        songService.incrementListen(song);
+
         return ResponseEntity.ok(Files.readAllBytes(audioFile.toPath()));
     }
 }
